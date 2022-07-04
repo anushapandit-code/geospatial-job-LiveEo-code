@@ -17,5 +17,12 @@ class Customer(BaseModel):
     critical_distances: List
 
 
+# create class for update request
+class CustomerUpdateRequest(BaseModel):
+    id: Optional[UUID] = uuid4()
+    type_: Optional[Type]
+    grid_file: Optional[str]
+    pole_file: Optional[str]
+    critical_distances: Optional[List]
 
 

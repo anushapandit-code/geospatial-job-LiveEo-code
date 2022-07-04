@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 from fastapi import FastAPI, HTTPException
-from models import Customer, Type
+from models import Customer, Type, CustomerUpdateRequest
 
 # create instance of application
 app = FastAPI()
@@ -42,6 +42,26 @@ async def retrieve_geospatial_job():
 async def add_geospatial_job(customer: Customer):
     db.append(customer)
     return {"id": customer.id}
+
+
+# update geospatial-job
+@app.put("/api/v1/customers/{customer_id}")
+async def post_geospatial_job(customer_update: CustomerUpdateRequest, customer_id: UUID):
+    for customer in db:
+        if customer.id == customer_id:
+            if customer_update.type_ is not None:
+                customer.type_ = customer_update.type_
+            if customer_update.grid_file is not None:
+                customer.grid_file = customer_update.grid_file
+            if customer_update.pole_file is not None:
+                customer.pole_file = customer_update.pole_file
+            if customer_update.critical_distances is not None:
+                customer.critical_distances = customer_update.critical_distances
+            return
+    raise HTTPException(
+        status_code=404,
+        detail=f"customer with id: {customer_id} does not exists"
+    )
 
 
 # Delete data from the database
